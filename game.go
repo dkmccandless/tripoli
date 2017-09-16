@@ -5,12 +5,9 @@ import (
 	"time"
 )
 
-// A Scoreboard maps Players to their scores.
-type Scoreboard map[Player]int
-
 type Game struct {
 	players []Player
-	score   Scoreboard
+	score   map[Player]int
 	stake   []int
 	kitty   int
 }
@@ -18,7 +15,7 @@ type Game struct {
 func NewGame(players []Player) *Game {
 	return &Game{
 		players: players,
-		score:   make(Scoreboard),
+		score:   make(map[Player]int),
 		stake:   make([]int, 52),
 	}
 }
