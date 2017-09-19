@@ -1,3 +1,4 @@
+// Package tripoli implements a simplified version of the Michigan portion of the card game Tripoli.
 package tripoli
 
 import (
@@ -5,6 +6,7 @@ import (
 	"time"
 )
 
+// A Game contains Players, their scores, and the values of the stakes on the table.
 type Game struct {
 	players []Player
 	score   map[Player]int
@@ -12,6 +14,7 @@ type Game struct {
 	kitty   int
 }
 
+// NewGame initializes a new Game with an unordered slice of Players and returns a pointer to it.
 func NewGame(players []Player) *Game {
 	return &Game{
 		players: players,
@@ -20,11 +23,13 @@ func NewGame(players []Player) *Game {
 	}
 }
 
+// Play plays a number of hands of Tripoli.
+// The deal rotates left after every hand.
 func (g *Game) Play(nhands int) {
 	rand.Seed(time.Now().UnixNano())
 	for hand := 0; hand < nhands; hand++ {
 		g.playHand()
-		// rotate the deal
+		// Rotate the deal
 		g.players = append(g.players[:len(g.players)-1], g.players[0])
 	}
 }
