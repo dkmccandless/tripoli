@@ -31,19 +31,8 @@ const (
 	Hearts
 )
 
-func (s Suit) Two() Card   { return Card(ranks*s) + Card(Two) }
-func (s Suit) Three() Card { return Card(ranks*s) + Card(Three) }
-func (s Suit) Four() Card  { return Card(ranks*s) + Card(Four) }
-func (s Suit) Five() Card  { return Card(ranks*s) + Card(Five) }
-func (s Suit) Six() Card   { return Card(ranks*s) + Card(Six) }
-func (s Suit) Seven() Card { return Card(ranks*s) + Card(Seven) }
-func (s Suit) Eight() Card { return Card(ranks*s) + Card(Eight) }
-func (s Suit) Nine() Card  { return Card(ranks*s) + Card(Nine) }
-func (s Suit) Ten() Card   { return Card(ranks*s) + Card(Ten) }
-func (s Suit) Jack() Card  { return Card(ranks*s) + Card(Jack) }
-func (s Suit) Queen() Card { return Card(ranks*s) + Card(Queen) }
-func (s Suit) King() Card  { return Card(ranks*s) + Card(King) }
-func (s Suit) Ace() Card   { return Card(ranks*s) + Card(Ace) }
+// Card returns the Card of the given Rank and Suit.
+func (s Suit) Card(r Rank) Card { return Card(ranks*s) + Card(r) }
 
 // Color returns the color of a Suit.
 func (s Suit) Color() Color { return Color(s & 1) }
@@ -68,10 +57,8 @@ const (
 	Ace
 )
 
-func (r Rank) Clubs() Card    { return Card(ranks*Clubs) + Card(r) }
-func (r Rank) Diamonds() Card { return Card(ranks*Diamonds) + Card(r) }
-func (r Rank) Spades() Card   { return Card(ranks*Spades) + Card(r) }
-func (r Rank) Hearts() Card   { return Card(ranks*Hearts) + Card(r) }
+// Card returns the Card of the given Rank and Suit.
+func (r Rank) Card(s Suit) Card { return Card(ranks*s) + Card(r) }
 
 // A Card represents a card in a standard deck in suit-rank order
 // (two of clubs = 0, three of clubs = 1, ace of hearts = 51).
