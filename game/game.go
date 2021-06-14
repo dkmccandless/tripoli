@@ -23,13 +23,7 @@ func New(players []Player) *Game {
 	}
 	return &Game{
 		score: score,
-		stake: map[card.Card]int{
-			card.Hearts.Rank(card.Ten):   0,
-			card.Hearts.Rank(card.Jack):  0,
-			card.Hearts.Rank(card.Queen): 0,
-			card.Hearts.Rank(card.King):  0,
-			card.Hearts.Rank(card.Ace):   0,
-		},
+		stake: counters(0, 0, 0, 0, 0),
 	}
 }
 
@@ -72,8 +66,11 @@ type round struct {
 // init initializes a round with a shuffled deck, seats the players in a random
 // order, and antes for each player. init calls each Player's Init method.
 func (g *Game) init() *round {
-	r := &round{g: g}
 	n := len(g.score)
+	r := &round{
+		g: g,
+		n: make([]int, n),
+	}
 
 	for p := range g.score {
 		r.p = append(r.p, p)
@@ -84,10 +81,13 @@ func (g *Game) init() *round {
 	r.deck = rand.Perm(52)
 	hand := make([][]card.Card, n)
 	for i, v := range r.deck {
-		if v %= n + 1; v <= n {
+		switch v %= n + 1; {
+		case v < n:
+			// Player's hand
 			r.deck[i] = v
 			hand[v] = append(hand[v], card.Card(i))
-		} else {
+		case v == n:
+			// Extra hand
 			r.deck[i] = -1
 		}
 	}
@@ -107,7 +107,11 @@ func (g *Game) init() *round {
 // Play plays a round of Tripoli.
 // The players' positions in the deal are randomly assigned.
 func (g *Game) Play() {
-	r := g.init()
+	g.init().play()
+}
+
+// play plays an initialized round of Tripoli.
+func (r *round) play() {
 	var pos int
 	var won bool
 	for lead := r.firstLead(); ; {
@@ -216,8 +220,11 @@ func (r *round) ante(p Player) {
 
 // collect transfers a card's stake to a player's score.
 func (r *round) collect(p Player, c card.Card) {
-	r.g.score[p] += r.g.stake[c]
-	r.g.stake[c] = 0
+	// Do not write to stake if the key is not present
+	if r.g.stake[c] > 0 {
+		r.g.score[p] += r.g.stake[c]
+		r.g.stake[c] = 0
+	}
 }
 
 // payKitty transfers an amount from a player's score to the kitty.
@@ -230,4 +237,14 @@ func (r *round) payKitty(p Player, n int) {
 func (r *round) collectKitty(p Player) {
 	r.g.score[p] += r.g.kitty
 	r.g.kitty = 0
+}
+
+func counters(ten, jack, queen, king, ace int) map[card.Card]int {
+	return map[card.Card]int{
+		card.Hearts.Rank(card.Ten):   ten,
+		card.Hearts.Rank(card.Jack):  jack,
+		card.Hearts.Rank(card.Queen): queen,
+		card.Hearts.Rank(card.King):  king,
+		card.Hearts.Rank(card.Ace):   ace,
+	}
 }
