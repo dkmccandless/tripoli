@@ -77,11 +77,6 @@ func TestCard(t *testing.T) {
 				test.card, rank, test.rank,
 			)
 		}
-		if card := test.rank.Suit(test.suit); card != test.card {
-			t.Errorf("%v.Suit(%v): got %v, expected %v",
-				test.rank, test.suit, card, test.card,
-			)
-		}
 		if card := test.suit.Rank(test.rank); card != test.card {
 			t.Errorf("%v.Rank(%v): got %v, expected %v",
 				test.suit, test.rank, card, test.card,

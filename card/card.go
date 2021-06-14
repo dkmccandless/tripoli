@@ -34,9 +34,6 @@ const (
 	Ace
 )
 
-// Suit returns the Card of the given Suit.
-func (r Rank) Suit(s Suit) Card { return Card(13*s) + Card(r) }
-
 // A Suit is a standard playing card suit.
 // Clubs and Diamonds are the "minor suits"
 // and Spades and Hearts the "major suits".
